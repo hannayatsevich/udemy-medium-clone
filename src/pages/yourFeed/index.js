@@ -11,12 +11,12 @@ import Loading from 'components/loading';
 import FeedToggler from 'components/feedToggler';
 import Banner from 'components/banner';
 
-const GlobalFeed = ({location, match}) => {
+const YourFeed = ({location, match}) => {
   const url = match.url;
   const {offset, currentPage} = getPaginator(location.search);
   const stringifiedParams = stringify({limit, offset});
-
-  const apiUrl = `/articles?${stringifiedParams}`;
+  //todo не работает api
+  const apiUrl = `/articles/feed?${stringifiedParams}`;
   const [{response, isLoading, error}, doFetch] = useFetch(apiUrl);
 
   useEffect(() => {
@@ -53,4 +53,4 @@ const GlobalFeed = ({location, match}) => {
   );
 };
 
-export default GlobalFeed;
+export default YourFeed;

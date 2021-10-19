@@ -8,6 +8,7 @@ const Feed = ({articles}) => {
         <div key={index} className="article-preview">
           <div className="article-meta">
             <Link to={`/profiles/${article.author.username}`}>
+              {/*todo дефолтная картинка*/}
               {/*<img src={article.author.image} alt="userimage" />*/}
             </Link>
             <div className="info">
@@ -26,7 +27,7 @@ const Feed = ({articles}) => {
             <span>Read more...</span>
             <ul className="tag-list">
               {article.tagList.map((tag) => (
-                <li key="tag" className="tag-default tag-pill tag-outline">
+                <li key={tag} className="tag-default tag-pill tag-outline">
                   {tag}
                 </li>
               ))}
