@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom';
 import useFetch from 'hooks/useFetch';
 import useLocalStorage from 'hooks/useLocalStorage';
 import {CurrentUserContext} from 'contexts/currentUser';
+import BackendErrorMessages from 'pages/authentication/components/backendErrorMessages';
 
 const Authentication = (props) => {
   const isLogIn = props.match.path === '/login';
@@ -12,13 +13,12 @@ const Authentication = (props) => {
   const descriptionText = isLogIn ? 'Need an account?' : 'Have an account?';
   const descriptionLink = isLogIn ? '/register' : '/login';
 
-  const [currentUserState, setCurrentUserState] =
-    useContext(CurrentUserContext); // получили то, что передали в CurrentUserContext.Provider
+  const [, setCurrentUserState] = useContext(CurrentUserContext); // currentUserState // получили то, что передали в CurrentUserContext.Provider
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSuccessfulSubmit, setIsSuccessfulSubmit] = useState(false);
-  const [token, setToken] = useLocalStorage('token');
+  const [, setToken] = useLocalStorage('token'); //token
 
   const apiUrl = isLogIn ? '/users/login' : '/users';
   const [{response, isLoading, error}, doFetch] = useFetch(apiUrl);
@@ -40,7 +40,7 @@ const Authentication = (props) => {
   };
 
   useEffect(() => {
-    if (!response) return;
+    if (!response || isSuccessfulSubmit) return;
 
     setToken(response.user.token);
     setIsSuccessfulSubmit(true);
@@ -50,7 +50,20 @@ const Authentication = (props) => {
       isLoading: false,
       currentUser: response.user,
     }));
-  }, [response, setToken]);
+  }, [response, setToken, setCurrentUserState, isSuccessfulSubmit]);
+
+  useEffect(() => {
+    if (!error || isSuccessfulSubmit) return;
+
+    setCurrentUserState((state) => ({
+      ...state,
+      isLoggedIn: false,
+      isLoading: false,
+      currentUser: null,
+    }));
+  }, [error, setCurrentUserState, isSuccessfulSubmit]);
+
+  // console.log('currentUserState', currentUserState);
 
   if (isSuccessfulSubmit) return <Redirect to="/" />;
 
@@ -64,6 +77,7 @@ const Authentication = (props) => {
               <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
             <form onSubmit={handleSubmit}>
+              {error && <BackendErrorMessages backendErrors={error.errors} />}
               <fieldset>
                 {!isLogIn && (
                   <fieldset className="form-group">
