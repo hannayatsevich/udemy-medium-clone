@@ -5,20 +5,14 @@ import {CurrentUserContext} from 'contexts/currentUser';
 import useLocalStorage from 'hooks/useLocalStorage';
 
 const TopBar = () => {
-  const [{isLoggedIn, currentUser}, setCurrentUserState] =
-    useContext(CurrentUserContext); // получили то, что передали в CurrentUserContext.Provider
+  const [{isLoggedIn, currentUser}, dispatch] = useContext(CurrentUserContext); // получили то, что передали в CurrentUserContext.Provider
   const [, setToken] = useLocalStorage('token'); //token
 
   const logOut = () => {
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoggedIn: false,
-      currentUser: null,
-    }));
-    setToken('');
+    setToken(null);
+    dispatch({type: 'LOG_OUT'});
   };
 
-  // console.log('TopBar currentUserState', currentUser);
   return (
     <nav className="navbar navbar-light">
       <div className="container">

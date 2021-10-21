@@ -5,7 +5,7 @@ import {Redirect} from 'react-router-dom';
 import useFetch from 'hooks/useFetch';
 import useLocalStorage from 'hooks/useLocalStorage';
 import {CurrentUserContext} from 'contexts/currentUser';
-import BackendErrorMessages from 'pages/authentication/components/backendErrorMessages';
+import BackendErrorMessages from 'components/backendErrorMessages';
 
 const Authentication = (props) => {
   const isLogIn = props.match.path === '/login';
@@ -13,7 +13,7 @@ const Authentication = (props) => {
   const descriptionText = isLogIn ? 'Need an account?' : 'Have an account?';
   const descriptionLink = isLogIn ? '/register' : '/login';
 
-  const [, setCurrentUserState] = useContext(CurrentUserContext); // currentUserState // получили то, что передали в CurrentUserContext.Provider
+  const [, dispatch] = useContext(CurrentUserContext); // currentUserState // получили то, что передали в CurrentUserContext.Provider
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,27 +43,14 @@ const Authentication = (props) => {
     if (!response || isSuccessfulSubmit) return;
 
     setToken(response.user.token);
+    dispatch({type: 'SET_AUTHORIZED', payload: response.user});
     setIsSuccessfulSubmit(true);
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoggedIn: true,
-      isLoading: false,
-      currentUser: response.user,
-    }));
-  }, [response, setToken, setCurrentUserState, isSuccessfulSubmit]);
+  }, [response, setToken, isSuccessfulSubmit, dispatch]);
 
   useEffect(() => {
     if (!error || isSuccessfulSubmit) return;
-
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoggedIn: false,
-      isLoading: false,
-      currentUser: null,
-    }));
-  }, [error, setCurrentUserState, isSuccessfulSubmit]);
-
-  // console.log('currentUserState', currentUserState);
+    dispatch({type: 'SET_ERROR'});
+  }, [error, isSuccessfulSubmit, dispatch]);
 
   if (isSuccessfulSubmit) return <Redirect to="/" />;
 

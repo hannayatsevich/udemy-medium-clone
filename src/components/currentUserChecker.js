@@ -6,46 +6,28 @@ import useLocalStorage from 'hooks/useLocalStorage';
 
 const CurrentUserChecker = ({children}) => {
   const [{response, isLoading, error}, doFetch] = useFetch('/user');
-  const [, setCurrentUserState] = useContext(CurrentUserContext); //currentUserState // получили то, что передали в CurrentUserContext.Provider
+  const [, dispatch] = useContext(CurrentUserContext); //currentUserState // получили то, что передали в CurrentUserContext.Provider
   const [token] = useLocalStorage('token'); //token
 
   useEffect(() => {
     if (!token) {
-      setCurrentUserState((state) => ({
-        ...state,
-        isLoggedIn: false,
-      }));
+      dispatch({type: 'SET_UNAUTHORIZED'});
       return;
     }
 
     doFetch();
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoading: true,
-    }));
-  }, [token, setCurrentUserState, doFetch]); // только при инициализации
+    dispatch({type: 'LOADING'});
+  }, [token, doFetch, dispatch]); // только при инициализации
 
   useEffect(() => {
     if (!response) return;
-
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoading: isLoading,
-      isLoggedIn: true,
-      currentUser: response.user,
-    }));
-  }, [response, isLoading, setCurrentUserState]);
+    dispatch({type: 'SET_AUTHORIZED', payload: response.user});
+  }, [response, isLoading, dispatch]);
 
   useEffect(() => {
     if (!error) return;
-
-    setCurrentUserState((state) => ({
-      ...state,
-      isLoggedIn: false,
-      isLoading: isLoading,
-      currentUser: null,
-    }));
-  }, [error, isLoading, setCurrentUserState]);
+    dispatch({type: 'SET_ERROR'});
+  }, [error, isLoading, dispatch]);
 
   return children;
 };

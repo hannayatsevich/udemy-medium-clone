@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import TagList from 'components/tagList';
 
 const Feed = ({articles}) => {
   return (
@@ -8,8 +9,9 @@ const Feed = ({articles}) => {
         <div key={index} className="article-preview">
           <div className="article-meta">
             <Link to={`/profiles/${article.author.username}`}>
-              {/*todo дефолтная картинка*/}
-              {/*<img src={article.author.image} alt="userimage" />*/}
+              {article.author.image && (
+                <img src={article.author.image} alt="userimage" />
+              )}
             </Link>
             <div className="info">
               <Link
@@ -21,17 +23,11 @@ const Feed = ({articles}) => {
               <span className="date">{article.createdAt}</span>
             </div>
           </div>
-          <Link to={`/artticles/${article.slug}`} className="preview-link">
+          <Link to={`/articles/${article.slug}`} className="preview-link">
             <h1>{article.title}</h1>
             <p>{article.description}</p>
             <span>Read more...</span>
-            <ul className="tag-list">
-              {article.tagList.map((tag) => (
-                <li key={tag} className="tag-default tag-pill tag-outline">
-                  {tag}
-                </li>
-              ))}
-            </ul>
+            <TagList tags={article.tagList} />
           </Link>
         </div>
       ))}

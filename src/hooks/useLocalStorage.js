@@ -11,7 +11,7 @@ const useLocalStorage = (localStorageKey, initialValue = '') => {
   // }
 
   useEffect(() => {
-    if (!localStorageValue) return;
+    // if (!localStorageValue) return;
 
     localStorage.setItem(localStorageKey, localStorageValue);
   }, [localStorageKey, localStorageValue]);
