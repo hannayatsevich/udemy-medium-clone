@@ -1,5 +1,3 @@
-# сделать back на node.js
-
 https://angular.realworld.io/
 user@user.com
 user2@user.com
@@ -8,12 +6,14 @@ user2@user.com
 
 архитектура (страницы + компоненты)
 абсолютные пути к файлам - много путей - добавить jsconfig.json/tsconfig.json (см документацию CRA)
-### CRA + yarn
-prettier (установка в проект + настройка IDE)
+
+#### CRA + yarn
+#### prettier (установка в проект + настройка IDE)
 
 react-router, Link предотвращает перезагрузку страницы (см документацию)
 компонент, указанный в Route получает history, location
-### bootstrap
+
+#### bootstrap
 
 useState - как snapshoot, это каждый раз новая функции, с новым стейтом (не тот же обновленный стейт)
 lazy loading - разница между (влияет на performance):
@@ -29,20 +29,19 @@ useEffect - заменяет 3 МЖЦ, не блокируют браузер п
 эффекты со сбросом и без
 настроить пропуск вызова эффекта (первый раз сработает всегда)
 
-### axios https://habr.com/ru/company/ruvds/blog/477286/
+#### axios https://habr.com/ru/company/ruvds/blog/477286/
+
+#### classNames
 
 side effects, взаимодействие с localstorage, fetch запросы, манипуляции с DOM, логи, подписки
 
 useCallback - мемоизация ф-ии
 
 
-
-???(документация) если пришел новый friendId, его статус сохранился от старого, это зависит от ChatAPI, вызовется ли callback, который изменит state?
-
+## Запуск
 чтобы одновременно запустить  udemi-medium-clone и koa-knex-realworld-example:
 windows - set PORT=3001 && yarn start
 mac/linux - PORT=3001 yarn start
-
 
 koa-knex-realworld-example:
 
@@ -52,8 +51,19 @@ npm run db:migrate
 npm run db:load
 npm run dev
 
-
+##### Общее
 выносить логику перед JSX
 React Redirect более декларативен
+optimistic updates
 
-### classNames
+ДЗ:
+*чтобы работал Your Feed нужно кого то зафоловить. Перейдите на чей то профиль и нажмите follow. Но это сработает, только если кого вы зафоловили написал хоть 1 пост.
+
+follow user
+comment (delete)
+защита роутов по правам
+
+сделать back на node.js
+(при обновлении данных в бд возвращать обновленный элемент, а не только сообщение об успешном обновлении)
+
+???(документация) если пришел новый friendId, его статус сохранился от старого, это зависит от ChatAPI, вызовется ли callback, который изменит state?
