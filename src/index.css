@@ -1,3 +1,3 @@
-li::marker {
+li.nav-item::marker {
   content: '';
 }

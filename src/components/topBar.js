@@ -2,16 +2,9 @@ import React, {Fragment, useContext} from 'react';
 import {Link, NavLink} from 'react-router-dom';
 
 import {CurrentUserContext} from 'contexts/currentUser';
-import useLocalStorage from 'hooks/useLocalStorage';
 
 const TopBar = () => {
-  const [{isLoggedIn, currentUser}, dispatch] = useContext(CurrentUserContext); // получили то, что передали в CurrentUserContext.Provider
-  const [, setToken] = useLocalStorage('token'); //token
-
-  const logOut = () => {
-    setToken(null);
-    dispatch({type: 'LOG_OUT'});
-  };
+  const [{isLoggedIn, currentUser}] = useContext(CurrentUserContext); // получили то, что передали в CurrentUserContext.Provider
 
   return (
     <nav className="navbar navbar-light">
@@ -48,6 +41,12 @@ const TopBar = () => {
                 </NavLink>
               </li>
               <li className="nav-item">
+                <NavLink to="/settings" className="nav-link">
+                  <i className="ion-gear-a" />
+                  &nbsp; Settings
+                </NavLink>
+              </li>
+              <li className="nav-item">
                 <NavLink
                   to={`/profiles/${currentUser.username}`}
                   className="nav-link"
@@ -62,9 +61,6 @@ const TopBar = () => {
                   &nbsp;
                   {currentUser.username}
                 </NavLink>
-              </li>
-              <li className="nav-item" onClick={logOut}>
-                <div className="nav-link">Log Out</div>
               </li>
             </Fragment>
           )}

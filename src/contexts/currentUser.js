@@ -22,7 +22,7 @@ const reducer = (state, action) => {
     case 'SET_ERROR':
       return {...state, isLoggedIn: false, isLoading: false, currentUser: null};
     case 'LOG_OUT':
-      return {...state, isLoggedIn: false, isLoading: false, currentUser: null};
+      return {...initialState, isLoggedIn: false};
     default:
       return state;
   }

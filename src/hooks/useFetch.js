@@ -4,8 +4,8 @@ import useLocalStorage from 'hooks/useLocalStorage';
 const axios = require('axios');
 
 const useFetch = (url) => {
-  // const baseUrl = 'https://conduit.productionready.io/api';
-  const baseUrl = 'http://localhost:3000/api';
+  const baseUrl = 'https://conduit.productionready.io/api';
+  // const baseUrl = 'http://localhost:3000/api';
 
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState(null);
@@ -20,6 +20,7 @@ const useFetch = (url) => {
   }, []);
 
   useEffect(() => {
+    let skipGetResponseAfterDestroy = false;
     const requestOptions = {
       ...options,
       headers: {
@@ -31,15 +32,21 @@ const useFetch = (url) => {
 
     axios(baseUrl + url, requestOptions)
       .then((response) => {
-        setResponse(response.data);
-        setError(null);
-        setIsLoading(false);
+        if (!skipGetResponseAfterDestroy) {
+          setResponse(response.data);
+          setError(null);
+          setIsLoading(false);
+        }
       })
       .catch((error) => {
-        setError(error.response ? error.response.data : error.message);
-        setResponse(null);
-        setIsLoading(false);
+        if (!skipGetResponseAfterDestroy) {
+          setError(error.response ? error.response.data : error.message);
+          setResponse(null);
+          setIsLoading(false);
+        }
       });
+
+    return () => (skipGetResponseAfterDestroy = true);
   }, [isLoading, url, options, token]);
 
   useEffect(() => {
